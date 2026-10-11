@@ -1,0 +1,28 @@
+
+name: CKD Prediction CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check required files
+        run: |
+          test -f app.py
+          test -f train_model.py
+          test -f requirements.txt
+          test -f Dockerfile
+          test -f ckd_dataset.csv
+
+      - name: Build Docker image
+        run: docker build -t ckd-prediction:ci .
